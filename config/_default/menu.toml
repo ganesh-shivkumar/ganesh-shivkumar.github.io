@@ -1,12 +1,12 @@
 # Configure main menu and social menu
-[[main]]
-identifier = "resume"
-name = "Resume"
-url = "/"
+#[[main]]
+#identifier = "resume"
+#name = "Resume"
+#url = "/"
 
-[main.params]
-icon = "menu-resume"
-newtab = false
+#[main.params]
+#icon = "menu-resume"
+#anewtab = false
 
 [[social]]
 identifier = "github"
