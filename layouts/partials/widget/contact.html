@@ -1,59 +1,102 @@
 <section class="widget widget-contact">
     <h2 class="widget-title section-title">Contact Me</h2>
-    
-    <div class="widget-body--left">
-        <p style="margin-bottom: 15px;">
-            Fill out the form below to send an email.
-        </p>
 
-        <form id="contact-form" style="display: flex; flex-direction: column; gap: 12px;">
+    <div class="widget-body--left" id="title-form-container">
+        <p style="margin-bottom: 15px;">
+            Fill out the form below or send me an email directly to <a href="mailto:ganny131293@gmail.com">ganny131293@gmail.com</a>
+        </p>
+    </div>
+
+    <div class="widget-body--left" id="contact-form-container">
+        <form id="contact-form" action="https://formspree.io/f/xgvgroqe" method="POST" style="display: flex; flex-direction: column; gap: 12px;">
             
             <div>
                 <label for="name" style="font-size: 0.9em; font-weight: bold;">Name</label>
-                <input type="text" id="name" placeholder="Your Name"
+                <input type="text" name="name" id="name" required 
+                       style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px;">
+            </div>
+
+            <div>
+                <label for="email" style="font-size: 0.9em; font-weight: bold;">Email</label>
+                <input type="email" name="email" id="email" required 
                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px;">
             </div>
 
             <div>
                 <label for="phone" style="font-size: 0.9em; font-weight: bold;">Phone Number</label>
-                <input type="tel" id="phone" placeholder="Optional"
+                <input type="tel" name="phone" id="phone" 
                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px;">
             </div>
 
             <div>
                 <label for="message" style="font-size: 0.9em; font-weight: bold;">Message</label>
-                <textarea id="message" rows="4" placeholder="Type your message here..."
+                <textarea name="message" id="message" rows="4" required 
                           style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px; font-family: inherit;"></textarea>
             </div>
 
-            <button type="button" onclick="sendMail()" 
+            <button type="submit" id="contact-submit-btn"
                     style="background-color: var(--card-text-color-main); color: var(--card-background); padding: 10px 15px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 5px;">
                 Email Me
             </button>
+            
+            <p id="contact-error-message" style="display: none; color: red; margin-top: 10px; font-size: 0.9em;"></p>
         </form>
     </div>
 
     <script>
-        function sendMail() {
-            var name = document.getElementById("name").value;
-            var phone = document.getElementById("phone").value;
-            var message = document.getElementById("message").value;
-
-            // My Email Address
-            var emailTo = "ganny131293@gmail.com";
+        var form = document.getElementById("contact-form");
+        
+        async function handleSubmit(event) {
+            event.preventDefault(); // Stop the browser from navigating away
             
-            // Create the Subject Line
-            var subject = "Contact from " + name;
+            var status = document.getElementById("contact-form-container");
+            var errorMsg = document.getElementById("contact-error-message");
+            var btn = document.getElementById("contact-submit-btn");
+            var data = new FormData(event.target);
+            
+            // Change button text to indicate loading
+            btn.innerHTML = "Sending...";
+            btn.disabled = true;
 
-            // Create the Body of the email
-            var body = "Hi Ganesh,\n\n" + 
-                       message + "\n\n" + 
-                       "----------------------------\n" +
-                       "From: " + name + "\n" + 
-                       "Phone: " + phone;
-
-            // Open the default email app
-            window.location.href = "mailto:" + emailTo + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+            fetch(event.target.action, {
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // SUCCESS: Replace the entire form container with the success message
+                    status.innerHTML = `
+                        <div style="text-align: center; padding: 20px 0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                            <h3 style="margin-top: 10px; color: green;">Email Sent!</h3>
+                            <p>Thanks for reaching out. I'll get back to you soon.</p>
+                        </div>
+                    `;
+                } else {
+                    // ERROR: Show error message but keep form
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                            errorMsg.textContent = data["errors"].map(error => error["message"]).join(", ");
+                        } else {
+                            errorMsg.textContent = "Oops! There was a problem submitting your form";
+                        }
+                        errorMsg.style.display = "block";
+                        btn.innerHTML = "Email Me";
+                        btn.disabled = false;
+                    })
+                }
+            }).catch(error => {
+                errorMsg.textContent = "Oops! There was a problem submitting your form";
+                errorMsg.style.display = "block";
+                btn.innerHTML = "Email Me";
+                btn.disabled = false;
+            });
         }
+        form.addEventListener("submit", handleSubmit);
     </script>
 </section>
