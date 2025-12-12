@@ -1,4 +1,40 @@
 <section class="widget widget-contact">
+    <style>
+        /* 1. Default Variables (Light Mode) */
+        .widget-contact {
+            --contact-text-color: #707070;
+            --contact-input-bg: #ffffff;
+            --contact-input-border: #ccc;
+        }
+
+        /* 2. CRITICAL FIX: Target the Theme's Dark Mode Selector */
+        [data-scheme="dark"] .widget-contact {
+            --contact-text-color: #e0e0e0; 
+            --contact-input-bg: #2d2d2d;    
+            --contact-input-border: #555;
+        }
+
+        /* 3. Apply styles globally to this widget to override theme defaults */
+        .widget-contact h2,
+        .widget-contact p,
+        .widget-contact label,
+        .widget-contact a {
+            color: var(--contact-text-color) !important;
+            transition: color 0.3s ease;
+        }
+
+        .widget-contact a {
+            text-decoration: underline;
+        }
+
+        .widget-contact input,
+        .widget-contact textarea {
+            background-color: var(--contact-input-bg) !important;
+            border: 1px solid var(--contact-input-border) !important;
+            color: var(--contact-text-color) !important;
+        }
+    </style>
+
     <h2 class="widget-title section-title">Contact Me</h2>
 
     <div class="widget-body--left" id="title-form-container">
@@ -13,25 +49,25 @@
             <div>
                 <label for="name" style="font-size: 0.9em; font-weight: bold;">Name</label>
                 <input type="text" name="name" id="name" required 
-                       style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px;">
+                       style="width: 100%; padding: 8px; border-radius: 5px; margin-top: 4px;">
             </div>
 
             <div>
                 <label for="email" style="font-size: 0.9em; font-weight: bold;">Email</label>
                 <input type="email" name="email" id="email" required 
-                       style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px;">
+                       style="width: 100%; padding: 8px; border-radius: 5px; margin-top: 4px;">
             </div>
 
             <div>
                 <label for="phone" style="font-size: 0.9em; font-weight: bold;">Phone Number</label>
                 <input type="tel" name="phone" id="phone" 
-                       style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px;">
+                       style="width: 100%; padding: 8px; border-radius: 5px; margin-top: 4px;">
             </div>
 
             <div>
                 <label for="message" style="font-size: 0.9em; font-weight: bold;">Message</label>
                 <textarea name="message" id="message" rows="4" required 
-                          style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px; font-family: inherit;"></textarea>
+                          style="width: 100%; padding: 8px; border-radius: 5px; margin-top: 4px; font-family: inherit;"></textarea>
             </div>
 
             <button type="submit" id="contact-submit-btn"
@@ -47,14 +83,13 @@
         var form = document.getElementById("contact-form");
         
         async function handleSubmit(event) {
-            event.preventDefault(); // Stop the browser from navigating away
+            event.preventDefault(); 
             
             var status = document.getElementById("contact-form-container");
             var errorMsg = document.getElementById("contact-error-message");
             var btn = document.getElementById("contact-submit-btn");
             var data = new FormData(event.target);
             
-            // Change button text to indicate loading
             btn.innerHTML = "Sending...";
             btn.disabled = true;
 
@@ -66,7 +101,6 @@
                 }
             }).then(response => {
                 if (response.ok) {
-                    // SUCCESS: Replace the entire form container with the success message
                     status.innerHTML = `
                         <div style="text-align: center; padding: 20px 0;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -74,11 +108,10 @@
                                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
                             </svg>
                             <h3 style="margin-top: 10px; color: green;">Email Sent!</h3>
-                            <p>Thanks for reaching out. I'll get back to you soon.</p>
+                            <p style="color: var(--contact-text-color);">Thanks for reaching out. I'll get back to you soon.</p>
                         </div>
                     `;
                 } else {
-                    // ERROR: Show error message but keep form
                     response.json().then(data => {
                         if (Object.hasOwn(data, 'errors')) {
                             errorMsg.textContent = data["errors"].map(error => error["message"]).join(", ");
