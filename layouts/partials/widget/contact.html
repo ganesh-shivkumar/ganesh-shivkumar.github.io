@@ -1,0 +1,59 @@
+<section class="widget widget-contact">
+    <h2 class="widget-title section-title">Contact Me</h2>
+    
+    <div class="widget-body--left">
+        <p style="margin-bottom: 15px;">
+            Fill out the form below to send an email.
+        </p>
+
+        <form id="contact-form" style="display: flex; flex-direction: column; gap: 12px;">
+            
+            <div>
+                <label for="name" style="font-size: 0.9em; font-weight: bold;">Name</label>
+                <input type="text" id="name" placeholder="Your Name"
+                       style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px;">
+            </div>
+
+            <div>
+                <label for="phone" style="font-size: 0.9em; font-weight: bold;">Phone Number</label>
+                <input type="tel" id="phone" placeholder="Optional"
+                       style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px;">
+            </div>
+
+            <div>
+                <label for="message" style="font-size: 0.9em; font-weight: bold;">Message</label>
+                <textarea id="message" rows="4" placeholder="Type your message here..."
+                          style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px; font-family: inherit;"></textarea>
+            </div>
+
+            <button type="button" onclick="sendMail()" 
+                    style="background-color: var(--card-text-color-main); color: var(--card-background); padding: 10px 15px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 5px;">
+                Email Me
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function sendMail() {
+            var name = document.getElementById("name").value;
+            var phone = document.getElementById("phone").value;
+            var message = document.getElementById("message").value;
+
+            // My Email Address
+            var emailTo = "ganny131293@gmail.com";
+            
+            // Create the Subject Line
+            var subject = "Contact from " + name;
+
+            // Create the Body of the email
+            var body = "Hi Ganesh,\n\n" + 
+                       message + "\n\n" + 
+                       "----------------------------\n" +
+                       "From: " + name + "\n" + 
+                       "Phone: " + phone;
+
+            // Open the default email app
+            window.location.href = "mailto:" + emailTo + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+        }
+    </script>
+</section>

@@ -55,6 +55,9 @@ limit = 10
 [[widgets.page]]
 type = "toc"
 
+[[widgets.homepage]]
+type = "contact"
+
 [opengraph.linkedin]
 site = ""
 card = "summary_large_image"
