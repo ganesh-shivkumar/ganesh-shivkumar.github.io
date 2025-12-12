@@ -1,5 +1,5 @@
 # Change baseurl before deploy
-baseurl = "https://gshiv.com"
+baseurl = "http://www.gshiv.com"
 languageCode = "en-us"
 title = "Ganesh Shivkumar"
 
